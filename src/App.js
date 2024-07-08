@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import logo from './logo.svg';
+import betterLogo from './others/ClearLogo2.jpg'
 import './App.css';
 // import Gallery from './components/Gallery.js';
 // import About from './components/About.js';
@@ -9,7 +10,7 @@ function App() {
     <div className="App">
       <header className="App-header">
         <Slideshow />
-        <img src={logo} className="App-logo" alt="logo" />
+        <img src={betterLogo} className="App-logo" alt="logo" />
         <h1>Safer Hydrocleaning</h1>
       </header>
       <nav>

@@ -11,7 +11,7 @@ function App() {
       <header className="App-header">
         <Slideshow />
         <img src={betterLogo} className="App-logo" alt="logo" />
-        <h1>Safer Hydrocleaning</h1>
+        {/* <h1>Safer Hydrocleaning</h1> */}
       </header>
       <nav>
         <ul>

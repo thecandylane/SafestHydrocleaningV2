@@ -7,6 +7,11 @@ body {
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background-image: url('./others/PowerWashingGraphic.jpeg');
+  background-size: cover; /* Make the background cover the entire viewport */
+  background-attachment: fixed; /* Ensure the background stays fixed when scrolling */
+  background-position: center; /* Center the background image */
+  background-repeat: no-repeat; 
   background-color: #f0f4f8;
   color: #333;
   text-align: center;

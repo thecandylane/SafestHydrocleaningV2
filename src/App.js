@@ -1,36 +1,81 @@
 import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import betterLogo from './others/ClearLogo2.jpg'
+import { BrowserRouter as Router, Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
+import betterLogo from './others/ClearLogo2.jpg';
 import './App.css';
-// import Gallery from './components/Gallery.js';
-// import About from './components/About.js';
+import Gallery from './components/Gallery';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <Slideshow />
-        <img src={betterLogo} className="App-logo" alt="logo" />
-        {/* <h1>Safer Hydrocleaning</h1> */}
-      </header>
-      <nav>
-        <ul>
-          <li><a href="#about">About</a></li>
-          <li><a href="#locations">Locations</a></li>
-          <li><a href="#gallery">Gallery</a></li>
-          <li><a href="#quote">Request a Free Quote</a></li>
-        </ul>
-      </nav>
-      <main>
-        <About />
-        <Locations />
-        <Gallery />
-        <Quote />
-      </main>
-      <footer>
-        <p>&copy; 2024 Safer Hydrocleaning. All rights reserved.</p>
-      </footer>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <Slideshow />
+          <img src={betterLogo} className="App-logo" alt="logo" />
+          {/* <h1>Safer Hydrocleaning</h1> */}
+        </header>
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/gallery" element={<Gallery />} />
+            <Route path="/" element={<Home />} />
+          </Routes>
+        </main>
+        <footer>
+          <p>&copy; 2024 Safer Hydrocleaning. All rights reserved.</p>
+        </footer>
+      </div>
+    </Router>
+  );
+}
+
+function Navbar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavClick = (e, sectionId) => {
+    if (location.pathname !== '/') {
+      e.preventDefault();
+      navigate('/');
+      setTimeout(() => {
+        document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+      }, 100); // Adjust delay as needed
+    }
+  };
+
+  return (
+    <nav>
+      <ul>
+        <li>
+          <Link to="/" onClick={(e) => handleNavClick(e, 'about')}>
+            About
+          </Link>
+        </li>
+        <li>
+          <Link to="/" onClick={(e) => handleNavClick(e, 'locations')}>
+            Locations
+          </Link>
+        </li>
+        <li>
+          <Link to="/gallery">Gallery</Link>
+        </li>
+        <li>
+          <Link to="/" onClick={(e) => handleNavClick(e, 'quote')}>
+            Request Quote
+          </Link>
+        </li>
+      </ul>
+    </nav>
+  );
+}
+
+function Home() {
+  return (
+    <>
+      <About />
+      <Locations />
+      <GalleryPreview />
+      <Quote />
+    </>
   );
 }
 
@@ -45,8 +90,6 @@ function Slideshow() {
 
     return () => clearInterval(interval);
   }, [images.length]);
-  console.log(images)
-  console.log(images.length)
 
   return (
     <div className="slideshow">
@@ -70,7 +113,6 @@ function About() {
   );
 }
 
-
 function Locations() {
   return (
     <section id="locations" className="card">
@@ -79,13 +121,32 @@ function Locations() {
     </section>
   );
 }
-function Gallery() {
+
+function GalleryPreview() {
+  const images = Array.from({ length: 49 }, (_, i) => require(`./images/image${i + 1}.jpg`));
+  const [currentImage, setCurrentImage] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImage((prevImage) => (prevImage + 1) % images.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [images.length]);
+
   return (
-    <section id="gallery" className="card">
+    <section id="gallery-preview" className="card">
       <h2>Gallery</h2>
-      <div className="gallery-grid">
-        {/* Images will go here */}
+      <div className="gallery-preview">
+        {images.map((image, index) => (
+          <div
+            key={index}
+            className={`preview-slide ${index === currentImage ? 'active' : ''}`}
+            style={{ backgroundImage: `url(${image})` }}
+          ></div>
+        ))}
       </div>
+      <Link to="/gallery" className="view-more-link">View More</Link>
     </section>
   );
 }

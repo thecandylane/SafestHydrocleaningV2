@@ -8,12 +8,11 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <Navbar />
         <header className="App-header">
           <Slideshow />
-          <img src={betterLogo} className="App-logo" alt="logo" />
-          {/* <h1>Safer Hydrocleaning</h1> */}
+          <About />
         </header>
-        <Navbar />
         <main>
           <Routes>
             <Route path="/gallery" element={<Gallery />} />
@@ -43,7 +42,8 @@ function Navbar() {
   };
 
   return (
-    <nav>
+    <nav className="navbar">
+      <img src={betterLogo} className="App-logo" alt="logo" />
       <ul>
         <li>
           <Link to="/" onClick={(e) => handleNavClick(e, 'about')}>
@@ -71,7 +71,6 @@ function Navbar() {
 function Home() {
   return (
     <>
-      <About />
       <Locations />
       <GalleryPreview />
       <Quote />
@@ -106,9 +105,13 @@ function Slideshow() {
 
 function About() {
   return (
-    <section id="about" className="card">
+    <section id="about" className="about card">
       <h2>About Us</h2>
-      <p>Welcome to Safer Hydrocleaning. We provide top-notch power washing services...</p>
+      <p>I've grown up around tools and machinery my whole life, and now with Safer Hydro Cleaning I am able to
+        revitalize the community with my versatile skillset and state of the art equipment. While I specialize in
+        pressure/soft washing, I am always looking for a new odd job to tackle. Don't risk your property, take the
+        Safer option and contact me for a free quote today!
+      </p>
     </section>
   );
 }
@@ -117,7 +120,10 @@ function Locations() {
   return (
     <section id="locations" className="card">
       <h2>Our Locations</h2>
-      <p>We serve the following areas...</p>
+      <p>EBR, Port Allen, West Baton Rouge, Livingston, Ascension, Saint Helena, East Feliciana, St. Francisville,
+        Pointe Coupee, Iberville, and more!
+
+      </p>
     </section>
   );
 }
@@ -134,14 +140,18 @@ function GalleryPreview() {
     return () => clearInterval(interval);
   }, [images.length]);
 
+  const visibleImages = images.slice(currentImage, currentImage + 5).concat(
+    images.slice(0, Math.max(0, currentImage + 5 - images.length))
+  );
+
   return (
     <section id="gallery-preview" className="card">
       <h2>Gallery</h2>
       <div className="gallery-preview">
-        {images.map((image, index) => (
+        {visibleImages.map((image, index) => (
           <div
             key={index}
-            className={`preview-slide ${index === currentImage ? 'active' : ''}`}
+            className={`preview-slide ${index === 0 ? 'active' : ''}`}
             style={{ backgroundImage: `url(${image})` }}
           ></div>
         ))}

@@ -5,6 +5,7 @@ body, html {
   box-sizing: border-box;
   font-family: Arial, sans-serif;
   overflow-x: hidden; /* Prevent horizontal scrolling */
+  background-image: url(./others/backgroundmaybe.png);
 }
 
 .App {
@@ -24,21 +25,27 @@ header, main, footer {
   justify-content: space-between;
   background-color: #333;
   padding: 1rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  border-bottom: 3px solid #00bfff;
+  position: relative;
+  z-index: 1000; /* Ensure navbar stays on top */
 }
 
 .navbar img {
-  height: 50px;
+  height: 80px;
+  margin-right: auto;
 }
 
 .navbar ul {
-  list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-  padding: 0;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 1rem;
+  padding-right: 1rem;
 }
 
+.navbar ul.show {
+  display: flex;
+}
 .navbar ul li {
   margin: 0 1rem;
 }
@@ -47,42 +54,151 @@ header, main, footer {
   color: white;
   text-decoration: none;
   font-size: 1rem;
+  padding: 0.5em 1em;
+  display: block;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 .navbar ul li a:hover {
-  text-decoration: underline;
+  background-color: #00bfff;
+  transform: scale(1.05);
+}
+
+.navbar .navbar-toggle {
+  display: none;
+  cursor: pointer;
+  background-color: #00bfff; /* Set button color to blue */
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  color: white;
+  font-size: 1.5rem;
+  border: none;
+  margin-left: auto;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+/* Responsive Navbar */
+@media (max-width: 768px) {
+  .navbar ul {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    background-color: #333;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+
+  .navbar ul.show {
+    display: flex;
+  }
+
+  .navbar .navbar-toggle {
+    display: block;
+  }
+
+  .navbar .navbar-toggle:hover {
+    background-color: #0099cc;
+    transform: scale(1.05);
+  }
+}
+
+/* Ensure sections do not overlap */
+section {
+  position: relative;
+  padding-top: 2rem;
+  z-index: 1;
 }
 
 /* Section styling */
 .card {
-  width: 100%;
+  width: 90%;
+  max-width: 1200px;
+  margin: 2rem auto;
   padding: 2rem;
   text-align: center;
   box-sizing: border-box;
+  background: #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.card p {
+  margin-left: 10%;
+  margin-right: 10%;
 }
 
 #about {
-  background-color: #87CEEB; /* Light Blue */
+  background-color: #e0f7fa; /* Light Cyan */
 }
 
 #locations {
-  background-color: #98FB98; /* Light Green */
+  background-color: #e8f5e9; /* Light Green */
 }
 
 #gallery-preview {
-  background-color: #87CEEB; /* Light Blue */
+  background-color: #e0f7fa; /* Light Cyan */
 }
 
 #quote {
-  background-color: #98FB98; /* Light Green */
+  background-color: #e8f5e9; /* Light Green */
 }
 
 /* Slideshow styling */
 .slideshow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; /* Ensures it covers the entire background */
+  text-align: center;
+  padding: 2rem;
   position: relative;
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
+  z-index: 0;
+}
+.slideshow h1,
+.slideshow h2,
+.slideshow .quote-button {
+  position: relative;
+  z-index: 2; /* Make sure the quote header and button are in front of the slideshow */
+}
+.slideshow h1 {
+  font-size: 2.5rem;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background for h1 */
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+.slideshow h2 {
+  font-size: 1.5rem;
+  text-align: center;
+  color: white;
+}
+.slideshow .quote-button {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  font-size: 1.2rem;
+  color: white;
+  background-color: #00bfff;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.slideshow .quote-button:hover {
+  background-color: #0099cc;
+}
+
+/* Adjusting slideshow background fit */
+.slideshow {
+  background: url('./others/backgroundmaybe.png') no-repeat center center;
+  background-size: cover;
 }
 
 .slide {
@@ -105,6 +221,8 @@ header, main, footer {
   flex-wrap: nowrap;
   justify-content: center;
   overflow: hidden; /* Ensure content doesn't overflow */
+  padding: 2rem;
+  z-index: 1;
 }
 
 .preview-slide {
@@ -114,6 +232,12 @@ header, main, footer {
   background-position: center;
   margin: 0.5rem;
   flex: 0 0 auto;
+  border-radius: 8px;
+  transition: transform 0.3s;
+}
+
+.preview-slide:hover {
+  transform: scale(1.05);
 }
 
 .preview-slide.active {
@@ -128,6 +252,8 @@ header, main, footer {
   font-size: 1.2rem;
   border: 2px solid #333;
   padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 .view-more-link:hover {
@@ -151,6 +277,8 @@ header, main, footer {
   max-width: 100%; /* Ensure inputs do not exceed viewport width */
   padding: 0.5rem;
   margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 #quote-form button {
@@ -159,10 +287,13 @@ header, main, footer {
   background-color: #333;
   color: white;
   cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s, transform 0.3s;
 }
 
 #quote-form button:hover {
   background-color: #555;
+  transform: scale(1.05);
 }
 
 /* Footer styling */
@@ -181,7 +312,7 @@ footer {
   .navbar ul {
     justify-content: center;
   }
-  
+
   .navbar ul li {
     margin: 0.5rem;
   }
@@ -197,12 +328,13 @@ footer {
 
 @media (max-width: 480px) {
   .navbar {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .navbar img {
-    margin-bottom: 1rem;
+    margin: 0;
   }
 
   .navbar ul {

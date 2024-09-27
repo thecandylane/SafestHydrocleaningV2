@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation, useNavigate } from 'react-router-dom';
 import betterLogo from './others/ClearLogo2.jpg';
 import './App.css';
 import Gallery from './components/Gallery';
+import emailjs from 'emailjs-com';
 
 function App() {
   return (
@@ -11,7 +12,6 @@ function App() {
         <Navbar />
         <header className="App-header">
           <Slideshow />
-          <About />
         </header>
         <main>
           <Routes>
@@ -28,6 +28,7 @@ function App() {
 }
 
 function Navbar() {
+  const [isNavOpen, setIsNavOpen] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -41,10 +42,17 @@ function Navbar() {
     }
   };
 
+  const toggleNavbar = () => {
+    setIsNavOpen(!isNavOpen);
+  };
+
   return (
     <nav className="navbar">
       <img src={betterLogo} className="App-logo" alt="logo" />
-      <ul>
+      <button className="navbar-toggle" onClick={toggleNavbar}>
+        ☰
+      </button>
+      <ul className={isNavOpen ? 'show' : ''}>
         <li>
           <Link to="/" onClick={(e) => handleNavClick(e, 'about')}>
             About
@@ -71,6 +79,7 @@ function Navbar() {
 function Home() {
   return (
     <>
+      <About />
       <Locations />
       <GalleryPreview />
       <Quote />
@@ -82,16 +91,25 @@ function Slideshow() {
   const images = Array.from({ length: 49 }, (_, i) => require(`./images/image${i + 1}.jpg`));
   const [currentImage, setCurrentImage] = useState(0);
 
+  const scrollToQuote = () => {
+    document.getElementById('quote').scrollIntoView({ behavior: 'smooth' });
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImage((prevImage) => (prevImage + 1) % images.length);
-    }, 15000);
+    }, 7500);
 
     return () => clearInterval(interval);
   }, [images.length]);
 
   return (
     <div className="slideshow">
+      <h1>Choose the Safer Option!!</h1>
+      {/* <h2>Click here for a free quote</h2> */}
+      <button className="quote-button" onClick={scrollToQuote}>
+        Get a Free Quote
+      </button>
       {images.map((image, index) => (
         <div
           key={index}
@@ -102,6 +120,7 @@ function Slideshow() {
     </div>
   );
 }
+
 
 function About() {
   return (
@@ -162,39 +181,45 @@ function GalleryPreview() {
 }
 
 function Quote() {
-  const handleSubmit = (event) => {
+  const form = useRef();
+
+  const sendEmail = (event) => {
     event.preventDefault();
-    const formData = new FormData(event.target);
-    const data = {
-      name: formData.get('name'),
-      email: formData.get('email'),
-      phone: formData.get('phone'),
-      service: formData.get('service'),
-    };
 
-    // Log the data to console for now
-    console.log('Form Data:', data);
+    emailjs.sendForm(
+      'service_n39guf4',      // Replace with your EmailJS service ID
+      'template_4jljulp',      // Replace with your EmailJS template ID
+      form.current,            // Reference to the form
+      '48BVpU-GlN38kRZDG'        // Replace with your EmailJS public key
+    ).then(
+      (result) => {
+        console.log('SUCCESS!', result.text);
+        alert('Your request has been submitted successfully!');
+      },
+      (error) => {
+        console.log('FAILED...', error.text);
+        alert('There was an error submitting your request.');
+      }
+    );
 
-    alert('Your request has been submitted!');
+    // Reset form after submission
     event.target.reset();
   };
 
   return (
     <section id="quote" className="card">
       <h2>Request a Free Quote Now!</h2>
-      <form id="quote-form" onSubmit={handleSubmit}>
-        <label htmlFor="name">Name:</label>
-        <input type="text" id="name" name="name" required />
-        <label htmlFor="email">Email:</label>
-        <input type="email" id="email" name="email" required />
-        <label htmlFor="phone">Phone:</label>
-        <input type="tel" id="phone" name="phone" />
-        <label htmlFor="service">Service Needed:</label>
-        <textarea id="service" name="service" required></textarea>
-        <button type="submit">Submit</button>
+      <form id="quote-form" ref={form} onSubmit={sendEmail}>
+        <input type="hidden" name="contact_number" value="123456" />
+        <label>Name</label>
+        <input type="text" name="user_name" required />
+        <label>Email</label>
+        <input type="email" name="user_email" required />
+        <label>Service Needed</label>
+        <textarea name="message" required></textarea>
+        <button type="submit">Send</button>
       </form>
     </section>
   );
 }
-
-export default App;
+export default App
